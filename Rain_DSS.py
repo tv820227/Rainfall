@@ -1,6 +1,7 @@
 #%%
 import os
 import xlwt
+import copy
 
 # os.chdir('D:\\TV\\Hou-Cun Zun\\model\\SWMM model\\rainfall')
 os.chdir('C:\\TV\\model\\SWMM model\\rainfall')
@@ -57,7 +58,6 @@ for j in range(6): # j = index of duration
         else:
             rainfall[raintype] = [round(V*k/100.0,2) for k in per_l]
         
-#%%
 
 # 輸出計算之時間序列
 book = xlwt.Workbook()
@@ -91,8 +91,9 @@ for h in d:
         time_temp.append(date_time)
         if date_time not in time_series:
             time_series.append(date_time)
-    sorted(time_series)
-    time_series_s[h] = time_temp
+    time_series_s[h] = sorted(time_temp)
+time_series = sorted(time_series)
+
 
 # output time series into excel
 cnt = 0
@@ -101,6 +102,7 @@ for i in time_series:
     sheet1.write(7+cnt,1,i)
     cnt += 1
 
+#%%
 # 輸出各個降雨的時間序列
 # y = year, h = hour
 cnt = 0
@@ -113,9 +115,14 @@ for h in range(6):
         sheet1.write(6,col,"INST-VAL")
         rain_key = str(d[h])+"hr_"+str(p[y])+"year"
         rain = rainfall[rain_key]
+        last_row = 6
         for i in range(len(rain)):
             row = 7+time_series.index(time_series_s[d[h]][i])
-            sheet1.write(row,col,rain[i]) 
+            for r in range(last_row+1,row+1,1):
+                print(r,col,last_row,row,i)
+                sheet1.write(row,col,rain[i]) 
+            last_row = row
+            # print(r,col,last_row,row,i)
         cnt += 1
 
 book.save("C:\\TV\\model\\Hou_Cun_Zun1\\HMS_rainfall.xls")
