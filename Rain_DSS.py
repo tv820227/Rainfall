@@ -59,17 +59,6 @@ for j in range(6): # j = index of duration
             rainfall[raintype] = [round(V*k/100.0,2) for k in per_l]
         
 
-# 輸出計算之時間序列
-book = xlwt.Workbook()
-sheet1 = book.add_sheet("sheet1")
-first_col = ["A","B","C","E","F","Units","Type"]
-
-# 先輸出整個excel固定的格式
-cnt = 0
-for i in first_col:
-    sheet1.write(cnt,0,i)
-    cnt += 1
-
 #%%
 # create time series
 time_series = []
@@ -95,6 +84,18 @@ for h in d:
 time_series = sorted(time_series)
 
 
+#%%
+# 輸出計算之時間序列
+book = xlwt.Workbook()
+sheet1 = book.add_sheet("sheet1")
+first_col = ["A","B","C","E","F","Units","Type"]
+
+# 先輸出整個excel固定的格式
+cnt = 0
+for i in first_col:
+    sheet1.write(cnt,0,i)
+    cnt += 1
+
 # output time series into excel
 cnt = 0
 for i in time_series:
@@ -109,20 +110,30 @@ cnt = 0
 for h in range(6):
     for y in range(6):
         col = 2 + cnt
+
+        # set the type of this rainfall
         sheet1.write(0,col,str(d[h])+"HR")
         sheet1.write(1,col,str(p[y])+"YEAR")
         sheet1.write(5,col,"mm")
         sheet1.write(6,col,"INST-VAL")
+        
+        # use key to find time series of this rainfall
         rain_key = str(d[h])+"hr_"+str(p[y])+"year"
         rain = rainfall[rain_key]
         last_row = 6
+
+        # set the rainfall to specific time
         for i in range(len(rain)):
             row = 7+time_series.index(time_series_s[d[h]][i])
+            
+            # fill the rainfall equal to last number into blank cell
             for r in range(last_row+1,row+1,1):
-                print(r,col,last_row,row,i)
-                sheet1.write(row,col,rain[i]) 
+                sheet1.write(r,col,rain[i])
             last_row = row
-            # print(r,col,last_row,row,i)
+        
+        # fill the rest of blank cells with 0
+        for r in range(last_row+1,7+len(time_series)):
+            sheet1.write(r,col,0)
         cnt += 1
 
 book.save("C:\\TV\\model\\Hou_Cun_Zun1\\HMS_rainfall.xls")
