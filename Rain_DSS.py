@@ -4,7 +4,7 @@ import xlwt
 import copy
 
 # os.chdir('D:\\TV\\Hou-Cun Zun\\model\\SWMM model\\rainfall')
-os.chdir('C:\\TV\\model\\SWMM model\\rainfall')
+os.chdir('C:\\TV\\model\\Hou_Cun_Zun1')
 
 # duration
 d = [1,2,3,6,12,24]
@@ -137,4 +137,4 @@ for h in range(6):
             sheet1.write(r,col,0)
         cnt += 1
 
-book.save("C:\\TV\\model\\Hou_Cun_Zun1\\HMS_rainfall.xls")
+book.save("C:\\TV\\model\\Hou_Cun_Zun1\\SSGM.xls")
