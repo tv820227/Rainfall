@@ -54,14 +54,18 @@ for j in range(6): # j = index of duration
         V = I*d[j] # 計算單位時間內的降雨量
         raintype = str(d[j])+"hr_"+str(p[i])+"year"
         if d[j] < 6:
-            rainfall[raintype] = [round(V*k/100.0,2) for k in per_s]
+            temp = [round(V*k/100.0,2) for k in per_s]
+            temp.insert(0,0)
+            rainfall[raintype] = temp
+            
         else:
-            rainfall[raintype] = [round(V*k/100.0,2) for k in per_l]
+            temp = [round(V*k/100.0,2) for k in per_l]
+            temp.insert(0,0)
+            rainfall[raintype] = temp
         
 
 #%%
 # create time series
-time_series = []
 time_series_s = {}
 for h in d:
     total_time = h * 60
@@ -72,16 +76,22 @@ for h in d:
     time_step = total_time/n_interval
     
     time_temp = []
-    for i in range(n_interval):
+    for i in range(n_interval+1):
         time = i*time_step
         hour = "0"+str(int(time//60))
         minute = "0"+str(int(time%60))
         date_time = "01Jan2000 "+hour[-2:]+minute[-2:]
         time_temp.append(date_time)
-        if date_time not in time_series:
-            time_series.append(date_time)
     time_series_s[h] = sorted(time_temp)
-time_series = sorted(time_series)
+
+#%%
+# out put all time series in time steps 5min
+time_series = []
+for time in range(0,24*60+5,5):
+    hour = "0"+str(int(time//60))
+    minute = "0"+str(int(time%60))
+    date_time = "01Jan2000 "+hour[-2:]+minute[-2:]
+    time_series.append(date_time)
 
 
 #%%
@@ -117,7 +127,6 @@ for h in range(6):
         sheet1.write(2,col,"PRECIP-CUM")
         sheet1.write(5,col,"mm")
         sheet1.write(6,col,"PER-CUM")
-        
         # use key to find time series of this rainfall
         rain_key = str(d[h])+"hr_"+str(p[y])+"year"
         rain = rainfall[rain_key]
