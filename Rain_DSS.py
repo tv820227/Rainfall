@@ -114,9 +114,9 @@ for h in range(6):
         # set the type of this rainfall
         sheet1.write(0,col,str(d[h])+"HR")
         sheet1.write(1,col,str(p[y])+"YEAR")
-        sheet1.write(2,col,"PRECIP-INC")
+        sheet1.write(2,col,"PRECIP-CUM")
         sheet1.write(5,col,"mm")
-        sheet1.write(6,col,"PER-CUM")
+        sheet1.write(6,col,"INST-CUM")
         
         # use key to find time series of this rainfall
         rain_key = str(d[h])+"hr_"+str(p[y])+"year"
